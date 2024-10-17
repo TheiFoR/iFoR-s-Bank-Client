@@ -10,7 +10,6 @@
 
 #include "src/main/core.h"
 
-
 //#define LOG_TO_FILE
 #ifdef LOG_TO_FILE
 #define logFilePath "logs.log"
