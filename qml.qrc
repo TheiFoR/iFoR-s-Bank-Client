@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/NavBar.qml</file>
+        <file>qml/Preview.qml</file>
+        <file>qml/Style.qml</file>
+        <file>qml/App.qml</file>
+        <file>qml/Authorization.qml</file>
+        <file>qml/ServerSynchronization.qml</file>
+        <file>qml/Registration.qml</file>
+        <file>qml/UStackLayout.qml</file>
+        <file>qml/UButton.qml</file>
+        <file>qml/UTextField.qml</file>
+        <file>qml/USecretTextField.qml</file>
+        <file>qml/Login.qml</file>
+        <file>qml/NewAccount.qml</file>
+        <file>qml/LinkingToTelegram.qml</file>
+        <file>qml/UPinView.qml</file>
+        <file>qml/UNumberKeyboard.qml</file>
+    </qresource>
+</RCC>

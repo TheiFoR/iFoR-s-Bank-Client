@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/images/logo/preview.png</file>
+        <file>assets/fonts/Roboto/Roboto-Black.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-BlackItalic.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Bold.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-BoldItalic.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Italic.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Light.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-LightItalic.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Medium.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-MediumItalic.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Regular.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Thin.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-ThinItalic.ttf</file>
+        <file>assets/images/icons/lock.svg</file>
+        <file>assets/images/icons/phone.svg</file>
+        <file>assets/images/icons/visibility.svg</file>
+        <file>assets/images/icons/visibility_off.svg</file>
+        <file>assets/images/icons/left_arrow.svg</file>
+    </qresource>
+</RCC>
