@@ -9,7 +9,8 @@ SOURCES += \
     src/main/core.cpp \
     src/main/eventdispatcher.cpp \
     src/user/user.cpp \
-    src/utils/parameterhandler.cpp
+    src/utils/bytehandler.cpp \
+    src/utils/parameterhandler.cpp \
 
 RESOURCES += \
     assets.qrc \
@@ -31,4 +32,6 @@ HEADERS += \
     src/main/eventdispatcher.h \
     src/user/user.h \
     src/enums.h \
-    src/utils/parameterhandler.h
+    src/utils/bytehandler.h \
+    src/utils/parameterhandler.h \
+    src/settings.h

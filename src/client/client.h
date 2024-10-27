@@ -8,6 +8,8 @@
 #include <QtLogging>
 #include <QEventLoop>
 
+#include "src/settings.h"
+#include "src/utils/bytehandler.h"
 #include "src/utils/parameterhandler.h"
 
 class Client : public QObject
@@ -27,27 +29,25 @@ signals:
     void command(quint64 commandId, const QVariantMap& parameters = QVariantMap());
 
 private:
-    QHostAddress _ip = QHostAddress("127.0.0.1");
-    quint16 _port = 1310;
+    QHostAddress _ip = Settings::ip;
+    quint16 _port = Settings::port;
+
+    QMap<quint64, std::function<void(const QVariantMap &)>> _functionHandler;
 
     std::unique_ptr<QTcpSocket> _socket;
-    std::unique_ptr<QEventLoop> _loop;
-    QMap<quint64, std::function<void(const QVariantMap&)>> _functionHandler;
 
-    QDataStream _inputStream;
+    ByteHandler _byteHandler;
 
-    void send(quint64 commandId, const QVariantMap& data);
 
+
+    void send(quint64 commandId, const QVariantMap &data);
     QByteArray read(int msecs = 10'000);
-    quint8 readUInt8(int msecs = 10'000);
-    quint8 toUInt8(const QByteArray& data);
 
-    void signup(const QVariantMap& parameters);
-
-    template<typename T>
-    QByteArray getPrepareBytes(const QString& name, T& value, qint16 size = -1);
-
+    void signup(const QVariantMap &parameters);
     void login(const QVariantMap &parameters);
+
+    template <typename T>
+    QByteArray getPrepareBytes(const QString &name, T &value, qint16 size = -1);
 };
 
 #endif // CLIENT_H

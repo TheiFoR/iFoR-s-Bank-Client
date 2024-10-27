@@ -50,94 +50,11 @@ void Client::readyRead()
     qWarning() << _socket->readAll();
 }
 
-QByteArray Client::read(int msecs)
-{
-    while(!_socket->waitForReadyRead(msecs) && _socket->isValid()){
-        qWarning("Long response from the server. Waiting for a response...");
-    }
-    if(!_socket->isValid()){
-        qCritical("Server has been closed!");
-        return "";
-    }
-    QByteArray data = _socket->readAll();
-    qDebug() << "Data from the server:" << data;
-    return data;
-}
-quint8 Client::readUInt8(int msecs)
-{
-    QByteArray data = read(msecs);
-
-    quint8 answer = toUInt8(data);
-
-    return answer;
-}
-
-quint8 Client::toUInt8(const QByteArray &data)
-{
-    return (quint8)data[0];
-}
-
-void Client::signup(const QVariantMap& parameters)
-{
-    ParameterHandler ph(parameters);
-
-    qint64 phoneNumber;
-    qint16 pinCode;
-
-    if(!ph.handle(phoneNumber, server::request::signup::phone)) return;
-    if(!ph.handle(pinCode, server::request::signup::pin)) return;
-
-    QVariantMap data;
-    data[server::request::signup::phone] = phoneNumber;
-    data[server::request::signup::pin] = pinCode;
-
-    send(server::request::signup::id, data);
-}
-void Client::login(const QVariantMap& parameters){
-    ParameterHandler ph(parameters);
-
-    qint64 phoneNumber;
-    qint16 pinCode;
-
-    if(!ph.handle(phoneNumber, app::login::phone)) return;
-    if(!ph.handle(pinCode, app::login::pin)) return;
-
-    QVariantMap data;
-    data[server::request::login::phone] = phoneNumber;
-    data[server::request::login::pin] = pinCode;
-
-    send(server::request::login::id, data);
-}
-
-template<typename T>
-QByteArray Client::getPrepareBytes(const QString& name, T &value, qint16 size)
-{
-    if (size == -1) size = sizeof(T);
-    else size *= sizeof(T);
-
-    QByteArray result;
-
-    result.append(static_cast<uchar>(name.size() & 0xFF));
-    result.append(static_cast<uchar>((name.size() >> 8) & 0xFF));
-
-    result.append(static_cast<uchar>(size & 0xFF));
-    result.append(static_cast<uchar>((size >> 8) & 0xFF));
-
-    result.append(QByteArray(name.toStdString().c_str(), name.size()));
-
-    result.append(reinterpret_cast<const char*>(&value), size);
-
-    result.resize(name.size() + size + 4);
-
-    return result;
-}
 
 void Client::send(quint64 commandId, const QVariantMap& data) {
     QByteArray message;
 
     quint16 id = commandId;
-
-    qDebug() << id;
 
     message.append(id & 0xFF00);
     message.append(id & 0x00FF);
@@ -181,4 +98,49 @@ void Client::send(quint64 commandId, const QVariantMap& data) {
 
     qDebug() << message;
     _socket->write(message);
+}
+QByteArray Client::read(int msecs)
+{
+    while(!_socket->waitForReadyRead(msecs) && _socket->isValid()){
+        qWarning("Long response from the server. Waiting for a response...");
+    }
+    if(!_socket->isValid()){
+        qCritical("Server has been closed!");
+        return "";
+    }
+    QByteArray data = _socket->readAll();
+    qDebug() << "Data from the server:" << data;
+    return data;
+}
+
+void Client::signup(const QVariantMap& parameters)
+{
+    ParameterHandler ph(parameters);
+
+    qint64 phoneNumber;
+    qint16 pinCode;
+
+    if(!ph.handle(phoneNumber, server::request::signup::phone)) return;
+    if(!ph.handle(pinCode, server::request::signup::pin)) return;
+
+    QVariantMap data;
+    data[server::request::signup::phone] = phoneNumber;
+    data[server::request::signup::pin] = pinCode;
+
+    send(server::request::signup::id, data);
+}
+void Client::login(const QVariantMap& parameters){
+    ParameterHandler ph(parameters);
+
+    qint64 phoneNumber;
+    qint16 pinCode;
+
+    if(!ph.handle(phoneNumber, app::login::phone)) return;
+    if(!ph.handle(pinCode, app::login::pin)) return;
+
+    QVariantMap data;
+    data[server::request::login::phone] = phoneNumber;
+    data[server::request::login::pin] = pinCode;
+
+    send(server::request::login::id, data);
 }
