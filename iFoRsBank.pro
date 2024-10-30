@@ -9,7 +9,7 @@ SOURCES += \
     src/main/core.cpp \
     src/main/eventdispatcher.cpp \
     src/user/user.cpp \
-    src/utils/bytehandler.cpp \
+    src/utils/byteparser.cpp \
     src/utils/parameterhandler.cpp \
 
 RESOURCES += \
@@ -32,6 +32,7 @@ HEADERS += \
     src/main/eventdispatcher.h \
     src/user/user.h \
     src/enums.h \
-    src/utils/bytehandler.h \
+    src/types/package.h \
+    src/utils/byteparser.h \
     src/utils/parameterhandler.h \
     src/settings.h

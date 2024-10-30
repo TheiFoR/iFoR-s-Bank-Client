@@ -46,58 +46,24 @@ void Client::commandHandler(const quint64 commandId, const QVariantMap &paramete
 
 void Client::readyRead()
 {
-    qWarning() << 1;
-    qWarning() << _socket->readAll();
+    QByteArray data = _socket->readAll();
+    Package package;
+
+    package = _byteParser.parse(data);
+
+    qDebug() << package.id << package.data;
 }
 
 
 void Client::send(quint64 commandId, const QVariantMap& data) {
-    QByteArray message;
+    Package package;
+    package.id = commandId;
+    package.data = data;
 
-    quint16 id = commandId;
+    QByteArray bytes = _byteParser.unparse(package);
 
-    message.append(id & 0xFF00);
-    message.append(id & 0x00FF);
-
-    for(QVariantMap::ConstIterator iter = data.constBegin(); iter != data.constEnd(); ++iter){
-        QString name = iter.key();
-        QVariant item = iter.value();
-
-        int typeId = item.userType();  // Получаем идентификатор типа
-
-        // Создаем объект через QMetaType
-        const char* typeName = QMetaType::typeName(typeId);
-        void *variable = QMetaType::create(typeId);
-
-        if (variable && item.convert(typeId)) {
-            // Заполняем данными, если конвертация успешна
-            QMetaType::construct(typeId, variable, item.constData());
-
-            QByteArray bytes;
-            if (typeId == QMetaType::Short) {
-                short value = *static_cast<short*>(variable);
-                bytes = getPrepareBytes(name, value);
-            } else if (typeId == QMetaType::LongLong) {
-                qint64 value = *static_cast<qint64*>(variable);
-                bytes = getPrepareBytes(name, value);
-            } else if (typeId == QMetaType::Int) {
-                qint32 value = *static_cast<qint32*>(variable);
-                bytes = getPrepareBytes(name, value);
-            }
-            else{
-                qCritical() << "Unknown type!";
-            }
-
-            message.append(bytes);
-
-            QMetaType::destroy(typeId, variable);
-        } else {
-            qCritical() << "Failed to create or convert variable.";
-        }
-    }
-
-    qDebug() << message;
-    _socket->write(message);
+    qDebug() << bytes;
+    _socket->write(bytes);
 }
 QByteArray Client::read(int msecs)
 {

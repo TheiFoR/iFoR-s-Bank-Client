@@ -9,7 +9,7 @@
 #include <QEventLoop>
 
 #include "src/settings.h"
-#include "src/utils/bytehandler.h"
+#include "src/utils/byteparser.h"
 #include "src/utils/parameterhandler.h"
 
 class Client : public QObject
@@ -36,7 +36,7 @@ private:
 
     std::unique_ptr<QTcpSocket> _socket;
 
-    ByteHandler _byteHandler;
+    ByteParser _byteParser;
 
 
 
