@@ -50,8 +50,7 @@ void Client::readyRead()
     Package package;
 
     package = _byteParser.parse(data);
-
-    qDebug() << package.id << package.data;
+    qDebug() << "Data from the server:" << package.id << package.data;
 }
 
 
@@ -62,7 +61,9 @@ void Client::send(quint64 commandId, const QVariantMap& data) {
 
     QByteArray bytes = _byteParser.unparse(package);
 
-    qDebug() << bytes;
+    qDebug() << "Send to the server:" << data;
+    qDebug() << "Send to the server raw:" << bytes;
+
     _socket->write(bytes);
 }
 QByteArray Client::read(int msecs)
