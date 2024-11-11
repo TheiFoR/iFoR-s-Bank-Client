@@ -4,9 +4,9 @@
 #include "../def.h"
 
 namespace app{
-    API_G(connection){
-       API_FIELD(connected)
-    }
+API_G(connection){
+   API_FIELD(connected)     // bool
+}
 }
 
 #endif // SERVERINFO_H

@@ -7,10 +7,17 @@
 #include <QTcpSocket>
 #include <QtLogging>
 #include <QEventLoop>
+#include <QTimer>
 
 #include "src/settings.h"
 #include "src/utils/byteparser.h"
 #include "src/utils/parameterhandler.h"
+
+#include "src/enums.h"
+
+#include "src/api/external/serverAuthorization.h"
+#include "src/api/internal/serverInfo.h"
+#include "src/api/internal/clientAuthorization.h"
 
 class Client : public QObject
 {
@@ -25,6 +32,10 @@ public slots:
 
     void readyRead();
 
+    void disconnected();
+    void connected();
+    void tryConnect();
+
 signals:
     void command(quint64 commandId, const QVariantMap& parameters = QVariantMap());
 
@@ -35,19 +46,18 @@ private:
     QMap<quint64, std::function<void(const QVariantMap &)>> _functionHandler;
 
     std::unique_ptr<QTcpSocket> _socket;
+    std::unique_ptr<QTimer> _tryConnectTimer = std::make_unique<QTimer>(this);
 
     ByteParser _byteParser;
 
 
 
     void send(quint64 commandId, const QVariantMap &data);
-    QByteArray read(int msecs = 10'000);
+
+    void loginResponseHandler(const QVariantMap &parameters);
 
     void signup(const QVariantMap &parameters);
     void login(const QVariantMap &parameters);
-
-    template <typename T>
-    QByteArray getPrepareBytes(const QString &name, T &value, qint16 size = -1);
 };
 
 #endif // CLIENT_H

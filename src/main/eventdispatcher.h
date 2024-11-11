@@ -8,6 +8,8 @@
 
 #include "../utils/parameterhandler.h"
 
+#include "src/enums.h"
+
 #include "src/api/internal/serverInfo.h"
 #include "src/api/internal/clientAuthorization.h"
 
@@ -47,6 +49,7 @@ public:
     // *** Client function ***
 
     void connection(const QVariantMap& parameters);
+    void loginResponseHandler(const QVariantMap& parameters);
 
 
     // *** Others ***

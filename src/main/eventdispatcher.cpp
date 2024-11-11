@@ -6,6 +6,7 @@ EventDispatcher::EventDispatcher(QObject *parent)
     using namespace std::placeholders;
 
     _functionHandler.insert(app::connection::id, std::bind(&EventDispatcher::connection, this, _1));
+    _functionHandler.insert(app::response::authorization::login::id, std::bind(&EventDispatcher::loginResponseHandler, this, _1));
 }
 
 void EventDispatcher::registerContext(QQmlApplicationEngine &engine)
@@ -41,10 +42,10 @@ void EventDispatcher::sendSignUpRequest(const QString &phone, const QString pin)
 
     QVariantMap parameters;
 
-    parameters[app::signup::phone] = phoneNumber;
-    parameters[app::signup::pin] = pinCode;
+    parameters[app::request::authorization::signup::phone] = phoneNumber;
+    parameters[app::request::authorization::signup::pin] = pinCode;
 
-    emit command(app::signup::id, parameters);
+    emit command(app::request::authorization::signup::id, parameters);
 }
 void EventDispatcher::sendLogInRequest(const QString &phone, const QString pin){
     qint64 phoneNumber = 0;
@@ -55,10 +56,10 @@ void EventDispatcher::sendLogInRequest(const QString &phone, const QString pin){
 
     QVariantMap parameters;
 
-    parameters[app::login::phone] = phoneNumber;
-    parameters[app::login::pin] = pinCode;
+    parameters[app::request::authorization::login::phone] = phoneNumber;
+    parameters[app::request::authorization::login::pin] = pinCode;
 
-    emit command(app::login::id, parameters);
+    emit command(app::request::authorization::login::id, parameters);
 }
 
 // *** Client function ***
@@ -76,7 +77,25 @@ void EventDispatcher::connection(const QVariantMap &parameters)
         return;
     }
 
-    setServerConnected(true);
+    setServerConnected(connected);
+}
+
+void EventDispatcher::loginResponseHandler(const QVariantMap &parameters)
+{
+    ParameterHandler ph(parameters);
+
+    qWarning() << parameters;
+
+    int code;
+    QString message;
+
+    if(!ph.handle(code, app::response::authorization::login::code)) return;
+    ph.handle(message, app::response::authorization::login::message);
+
+    if(code == login::error){
+        setServerMessage(message);
+        setServerMessageColor("#DC143C");
+    }
 }
 
 

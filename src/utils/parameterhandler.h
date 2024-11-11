@@ -7,12 +7,12 @@
 
 class ParameterHandler
 {
+public:
     enum FieldStatus {
         Optional,
         Mandatory
     };
 
-public:
     ParameterHandler(const QVariantMap& parameters);
 
     template <FieldStatus fieldStatus = Mandatory, typename T>
